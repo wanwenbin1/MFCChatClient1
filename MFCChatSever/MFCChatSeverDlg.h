@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "CServeSocket.h"
 
 // CMFCChatSeverDlg 对话框
 class CMFCChatSeverDlg : public CDialogEx
@@ -31,4 +32,8 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnBnClickedStartBtn();
+	CListBox m_list;
+	CServeSocket* m_serve;
 };

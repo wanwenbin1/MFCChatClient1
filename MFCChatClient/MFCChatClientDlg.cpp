@@ -1,4 +1,4 @@
-﻿
+﻿	
 // MFCChatClientDlg.cpp: 实现文件
 //
 
@@ -7,6 +7,7 @@
 #include "MFCChatClient.h"
 #include "MFCChatClientDlg.h"
 #include "afxdialogex.h"
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -59,6 +60,8 @@ CMFCChatClientDlg::CMFCChatClientDlg(CWnd* pParent /*=nullptr*/)
 void CMFCChatClientDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_LIST1, m_list);
+	DDX_Control(pDX, IDC_SENDMSG_EDIT, m_input);
 }
 
 BEGIN_MESSAGE_MAP(CMFCChatClientDlg, CDialogEx)
@@ -101,6 +104,8 @@ BOOL CMFCChatClientDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
+	GetDlgItem(IDC_PORT_EDIT)->SetWindowText(_T("5000"));
+	GetDlgItem(IDC_IPADDRESS)->SetWindowText(_T("127.0.0.1"));
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -160,10 +165,31 @@ void CMFCChatClientDlg::OnBnClickedConectBtn()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	TRACE(TEXT("[CharClient]Conect Btn"));
+	CString strPort, strIP;
+	GetDlgItem(IDC_PORT_EDIT)->GetWindowText(strPort);
+	GetDlgItem(IDC_IPADDRESS)->GetWindowText(strIP);
+	USES_CONVERSION;
+	LPCSTR szPort = (LPCSTR)T2A(strPort);
+	LPCSTR szIP =(LPCSTR) T2A(strIP);
+	//LPCSTR szPort =(LPCSTR)strPort.GetBuffer();
+	//TRACE("[CharClient]szPort=%s,szIP=%s", szPort,szIP);
+	int iPort = _ttoi(strPort);
+	TRACE("###m_client Creat Sucess....");
+	//创建套接字
+	m_client = new CMySocket;
 
-	TRACE(TEXT("[CharClient]Conect Btn"));
-	TRACE(TEXT("[CharClient]Conect Btn"));
-	TRACE(TEXT("[CharClient]Conect Btn"));
+	int a=m_client->Create();
+	if (a==0)
+	{
+		TRACE("###m_client Creat error %d", GetLastError());
+		
+		
+		return;
+	}
+	else
+	{
+		TRACE("###m_client Creat Sucess");
+	}
+	m_client->Connect(strIP, iPort);
 
-	
 }

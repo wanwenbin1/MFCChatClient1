@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include "CMySocket.h"
 
 
 // CMFCChatClientDlg 对话框
@@ -12,7 +13,7 @@ class CMFCChatClientDlg : public CDialogEx
 public:
 	CMFCChatClientDlg(CWnd* pParent = nullptr);	// 标准构造函数
 
-// 对话框数据
+// 对话框数据q
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_MFCCHATCLIENT_DIALOG };
 #endif
@@ -33,4 +34,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedConectBtn();
+	CMySocket  *m_client;
+	CListBox m_list;
+	CTime m_tm;
+	CEdit m_input;
 };

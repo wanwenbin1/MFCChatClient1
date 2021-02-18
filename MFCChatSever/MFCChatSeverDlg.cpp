@@ -7,7 +7,7 @@
 #include "MFCChatSever.h"
 #include "MFCChatSeverDlg.h"
 #include "afxdialogex.h"
-
+//#include "CServeSocket.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -59,12 +59,14 @@ CMFCChatSeverDlg::CMFCChatSeverDlg(CWnd* pParent /*=nullptr*/)
 void CMFCChatSeverDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_MSG_LIST, m_list);
 }
 
 BEGIN_MESSAGE_MAP(CMFCChatSeverDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(IDC_START_BTN, &CMFCChatSeverDlg::OnBnClickedStartBtn)
 END_MESSAGE_MAP()
 
 
@@ -100,7 +102,7 @@ BOOL CMFCChatSeverDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
-
+	GetDlgItem(IDC_PORT_EDIT)->SetWindowText(_T("5000"));
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -153,3 +155,26 @@ HCURSOR CMFCChatSeverDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+
+void CMFCChatSeverDlg::OnBnClickedStartBtn()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	TRACE(TEXT("####Conect Btn"));
+	CString strPort, strIP;
+	GetDlgItem(IDC_PORT_EDIT)->GetWindowText(strPort);
+	
+	USES_CONVERSION;
+	LPCSTR szPort = (LPCSTR)T2A(strPort);
+	
+	//LPCSTR szPort =(LPCSTR)strPort.GetBuffer();
+	TRACE("####szPort=%s", szPort);
+	int iPort = _ttoi(strPort);
+	//创建服务器SOCKET的对象
+	m_serve = new CServeSocket;
+	//创建SOCK 套接字
+	m_serve->Create();
+
+	m_serve->Listen();
+
+}

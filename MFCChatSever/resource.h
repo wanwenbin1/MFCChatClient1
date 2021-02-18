@@ -14,7 +14,6 @@
 #define IDC_DISCONNECT_BTN              1004
 #define IDC_QQ_BTN                      1005
 #define IDC_CAL_BTN                     1006
-#define IDC_STOP_BTN                    1007
 #define IDC_PORT_EDIT                   1008
 #define IDC_SEND_EDIT                   1009
 #define IDC_MSG_LIST                    1010
