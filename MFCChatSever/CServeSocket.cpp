@@ -18,8 +18,20 @@ void CServeSocket::OnAccept(int nErrorCode)
 
 	TRACE("####OnAccept");
 	CMFCChatSeverDlg* dlg = (CMFCChatSeverDlg*)AfxGetApp()->GetMainWnd();
+	dlg->m_chat = new CChatSocket;
+	//开始接收连接
+	Accept(*(dlg->m_chat));
+	/*CString str;
+	dlg->m_tm = CTime::GetCurrentTime();
+	str=dlg->m_tm.Format("%X");
+	str += _T("客户端连接成功");*/
+	
+	CString strShow;
+	CString strInfo = _T("");
+	CString strMsg = _T("客户端连接成功");
+	strShow =dlg-> CatShowString(strInfo, strMsg);
 
-
-
+	dlg->m_list.AddString(strShow);
+	dlg->m_list.UpdateData(FALSE);
 	CAsyncSocket::OnAccept(nErrorCode);
 }

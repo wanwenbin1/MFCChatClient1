@@ -12,6 +12,9 @@
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+//#include "../MFCChatSever/MFCChatSeverDlg.h"
+//#include "../MFCChatSever/MFCChatSeverDlg.cpp"
+//using namespace CMFCChatSeverDlg;
 
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
@@ -69,6 +72,7 @@ BEGIN_MESSAGE_MAP(CMFCChatClientDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_CONECT_BTN, &CMFCChatClientDlg::OnBnClickedConectBtn)
+	ON_BN_CLICKED(IDC_SEND_BTN, &CMFCChatClientDlg::OnBnClickedSendBtn)
 END_MESSAGE_MAP()
 
 
@@ -178,18 +182,54 @@ void CMFCChatClientDlg::OnBnClickedConectBtn()
 	//创建套接字
 	m_client = new CMySocket;
 
-	int a=m_client->Create();
-	if (a==0)
+	
+	if (!m_client->Create())
 	{
 		TRACE("###m_client Creat error %d", GetLastError());
-		
-		
 		return;
 	}
 	else
 	{
 		TRACE("###m_client Creat Sucess");
 	}
-	m_client->Connect(strIP, iPort);
+	if (m_client->Connect(strIP, iPort)==SOCKET_ERROR)
+	{
+		TRACE("###m_client Conect error %d", GetLastError());
+		return;
+	}
 
+}
+
+
+void CMFCChatClientDlg::OnBnClickedSendBtn()
+{
+	// TODO: 在此添加控件通知处理程序代码
+
+	CString strTempl;
+	GetDlgItem(IDC_SENDMSG_EDIT)->GetWindowText(strTempl);
+	USES_CONVERSION;
+	char* szSendBuf = T2A(strTempl);
+	//发送给服务端
+	m_client->Send(szSendBuf, SEND_MAX_BUF);
+	//显示到列表框
+	CString strShow;
+	CString strInfo = _T("我:");
+	CString strMsg = _T("");
+	strShow = CatShowString(strInfo,strMsg);
+	m_list.AddString(strShow);
+	UpdateData(FALSE);
+}
+
+CString CMFCChatClientDlg::CatShowString(CString strInfo, CString strMsg)
+{
+
+	CString strTime;
+	CTime tmNow;
+	tmNow = CTime::GetCurrentTime();
+	strTime = tmNow.Format("%X");
+	CString strShow;
+	strShow = strTime + strShow;
+	strShow += strInfo;
+	strShow += strMsg;
+	return strShow;
 }

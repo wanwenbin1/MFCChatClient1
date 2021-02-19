@@ -183,6 +183,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CChatSocket.h" />
     <ClInclude Include="CServeSocket.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MFCChatSever.h" />
@@ -192,6 +193,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CChatSocket.cpp" />
     <ClCompile Include="CServeSocket.cpp" />
     <ClCompile Include="MFCChatSever.cpp" />
     <ClCompile Include="MFCChatSeverDlg.cpp" />

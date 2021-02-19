@@ -36,6 +36,9 @@ public:
 	afx_msg void OnBnClickedConectBtn();
 	CMySocket  *m_client;
 	CListBox m_list;
-	CTime m_tm;
+	
 	CEdit m_input;
+	afx_msg void OnBnClickedSendBtn();
+
+	CString CatShowString(CString strInfo, CString strMsg);
 };

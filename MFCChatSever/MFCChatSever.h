@@ -14,7 +14,7 @@
 // CMFCChatSeverApp:
 // 有关此类的实现，请参阅 MFCChatSever.cpp
 //
-
+#define SEND_MAX_BUF 200
 class CMFCChatSeverApp : public CWinApp
 {
 public:

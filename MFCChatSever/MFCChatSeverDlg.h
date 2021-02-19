@@ -5,6 +5,7 @@
 #pragma once
 
 #include "CServeSocket.h"
+#include "CChatSocket.h"
 
 // CMFCChatSeverDlg 对话框
 class CMFCChatSeverDlg : public CDialogEx
@@ -36,4 +37,12 @@ public:
 	afx_msg void OnBnClickedStartBtn();
 	CListBox m_list;
 	CServeSocket* m_serve;
+	CChatSocket* m_chat;
+	//CTime m_tm;
+	
+	afx_msg void OnBnClickedDisconnectBtn();
+	afx_msg void OnBnClickedQqBtn();
+	
+	afx_msg void OnBnClickedButton3();
+	CString CatShowString(CString strInfo,CString strMsg);
 };

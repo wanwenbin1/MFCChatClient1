@@ -11,6 +11,7 @@
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+#include "../MFCChatClient/resource.h"
 
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
@@ -67,6 +68,9 @@ BEGIN_MESSAGE_MAP(CMFCChatSeverDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_START_BTN, &CMFCChatSeverDlg::OnBnClickedStartBtn)
+	ON_BN_CLICKED(IDC_DISCONNECT_BTN, &CMFCChatSeverDlg::OnBnClickedDisconnectBtn)
+	ON_BN_CLICKED(IDC_QQ_BTN, &CMFCChatSeverDlg::OnBnClickedQqBtn)
+	ON_BN_CLICKED(IDC_BUTTON3, &CMFCChatSeverDlg::OnBnClickedButton3)
 END_MESSAGE_MAP()
 
 
@@ -160,8 +164,9 @@ HCURSOR CMFCChatSeverDlg::OnQueryDragIcon()
 void CMFCChatSeverDlg::OnBnClickedStartBtn()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	MessageBox(TEXT("11111111111"));
 	TRACE(TEXT("####Conect Btn"));
-	CString strPort, strIP;
+	CString strPort;
 	GetDlgItem(IDC_PORT_EDIT)->GetWindowText(strPort);
 	
 	USES_CONVERSION;
@@ -173,8 +178,97 @@ void CMFCChatSeverDlg::OnBnClickedStartBtn()
 	//创建服务器SOCKET的对象
 	m_serve = new CServeSocket;
 	//创建SOCK 套接字
-	m_serve->Create();
-
-	m_serve->Listen();
+	if (!m_serve->Create(iPort))
+	{
+		TRACE("###m_server Creat errorCode= %d", GetLastError());
+		return;
+	}
+	
+	if (!m_serve->Listen())
+	{
+		TRACE("###m_server Listen errorCode=%d", GetLastError());
+		return;
+	}
+	/*CString str;
+	m_tm = CTime::GetCurrentTime();
+	str=m_tm.Format("%X");
+	str += _T("建立服务");*/
+	CString strShow;
+	CString strInfo = _T("");
+	CString strMsg = _T("建立服务");
+	strShow = CatShowString(strInfo, strMsg);
+	m_list.AddString(strShow);
+	UpdateData(FALSE);
+	//清空编辑框
+	//GetDlgItem(IDC_SENDMSG_EDIT)->SetWindowTextW(_T(""));
 
 }
+
+
+
+
+
+void CMFCChatSeverDlg::OnBnClickedDisconnectBtn()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	MessageBox(TEXT("sddfsfd"));
+}
+
+
+void CMFCChatSeverDlg::OnBnClickedQqBtn()
+{
+	// TODO: 在此添加控件通知处理程序代码
+}
+
+
+
+
+
+
+
+void CMFCChatSeverDlg::OnBnClickedButton3()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	MessageBox(TEXT("sddfsfd"));
+	MessageBox(TEXT("sddfsfd"));
+	// TODO: 在此添加控件通知处理程序代码
+	//TRACE("###Server Begin SendMsg");
+	CString strTempl;
+	GetDlgItem(IDC_SEND_EDIT)->GetWindowText(strTempl);
+
+	USES_CONVERSION;
+	char* szSendBuf = T2A(strTempl);
+	//发送给服务端
+	m_chat->Send(szSendBuf, SEND_MAX_BUF, 0);
+
+	//显示到列表框
+	//CString strShow = _T("服务端:");
+	//CString strTime;
+	//m_tm = CTime::GetCurrentTime();
+	//strTime = m_tm.Format("%X");
+	////2018 我:....
+	//strShow = strTime + strShow;
+	//strShow += strTempl;
+	CString strShow;
+	CString strInfo = _T("服务端:");
+	CString strMsg = strTempl;
+	strShow = CatShowString(strInfo, strMsg);
+	m_list.AddString(strShow);
+	UpdateData(FALSE);
+
+	GetDlgItem(IDC_SEND_EDIT)->SetWindowTextW(_T(""));
+}
+
+CString CMFCChatSeverDlg::CatShowString(CString strInfo, CString strMsg)
+{
+	CString strTime;
+	CTime tmNow;
+	tmNow = CTime::GetCurrentTime();
+	strTime = tmNow.Format("%X");
+	CString strShow;
+	strShow = strTime + strShow;
+	strShow += strInfo;
+	strShow += strMsg;
+	return strShow;
+}
+
