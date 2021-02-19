@@ -32,7 +32,7 @@ void CChatSocket::OnReceive(int nErrorCode)
 	//strShow = strTime + strShow;
 	//strShow += strRecvMSG;
 	CString strShow;
-	CString strInfo = _T("ÎÒ:");
+	CString strInfo = _T("");
 	strShow=dlg->CatShowString(strInfo, strRecvMSG);
 
 	dlg->m_list.AddString(strShow);

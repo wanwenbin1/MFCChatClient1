@@ -61,6 +61,7 @@ void CMFCChatSeverDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_MSG_LIST, m_list);
+	DDX_Control(pDX, IDC_COLOUR_COMBOX, m_WordColour);
 }
 
 BEGIN_MESSAGE_MAP(CMFCChatSeverDlg, CDialogEx)
@@ -71,6 +72,8 @@ BEGIN_MESSAGE_MAP(CMFCChatSeverDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_DISCONNECT_BTN, &CMFCChatSeverDlg::OnBnClickedDisconnectBtn)
 	ON_BN_CLICKED(IDC_QQ_BTN, &CMFCChatSeverDlg::OnBnClickedQqBtn)
 	ON_BN_CLICKED(IDC_BUTTON3, &CMFCChatSeverDlg::OnBnClickedButton3)
+	ON_BN_CLICKED(IDC_CLEAR_BTN, &CMFCChatSeverDlg::OnBnClickedClearBtn)
+	ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
 
@@ -104,9 +107,20 @@ BOOL CMFCChatSeverDlg::OnInitDialog()
 	//  执行此操作
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
+	GetDlgItem(IDC_START_BTN)->EnableWindow(TRUE);
+	GetDlgItem(IDC_BUTTON3)->EnableWindow(FALSE);
+	GetDlgItem(IDC_DISCONNECT_BTN)->EnableWindow(FALSE);
 
 	// TODO: 在此添加额外的初始化代码
 	GetDlgItem(IDC_PORT_EDIT)->SetWindowText(_T("5000"));
+
+	m_WordColour.AddString(_T("黑色"));
+	m_WordColour.AddString(_T("红色"));
+	m_WordColour.AddString(_T("蓝色"));
+
+
+	m_WordColour.SetCurSel(0);
+	SetDlgItemText(IDC_COLOUR_COMBOX, _T("黑色"));
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -129,6 +143,7 @@ void CMFCChatSeverDlg::OnSysCommand(UINT nID, LPARAM lParam)
 
 void CMFCChatSeverDlg::OnPaint()
 {
+	//TRACE("###OnPaint");
 	if (IsIconic())
 	{
 		CPaintDC dc(this); // 用于绘制的设备上下文
@@ -148,6 +163,28 @@ void CMFCChatSeverDlg::OnPaint()
 	}
 	else
 	{
+		//1.dc
+		CPaintDC dc(this);
+		//2.目的区域
+		CRect rect;
+		GetClientRect(&rect);
+		TRACE("widh=%d,hegth=%d",rect.Width(),rect.Height());
+		//3.定义 创建
+		CDC dcBmp;
+		dcBmp.CreateCompatibleDC(&dcBmp);
+		//4.载入图片资源
+		CBitmap bmpBackroud;
+		bmpBackroud.LoadBitmap(IDB_HILL_BITMAP111);
+		//5.将图片资源载入bitmap位图
+		BITMAP bBitmap;
+		bmpBackroud.GetBitmap(&bBitmap);
+		//6.将位图选入内存设备环境
+		CBitmap* pbmpOld = dcBmp.SelectObject(&bmpBackroud);
+		//7.开始绘制
+		/*int x, int y, int nWidth, int nHeight, CDC* pSrcDC,
+			int xSrc, int ySrc, int nSrcWidth, int nSrcHeight, DWORD dwRop)*/
+		dc.StretchBlt(0, 0, rect.Width(), rect.Height(), &dcBmp,
+			0, 0, bBitmap.bmWidth, bBitmap.bmHeight, SRCCOPY);
 		CDialogEx::OnPaint();
 	}
 }
@@ -164,6 +201,10 @@ HCURSOR CMFCChatSeverDlg::OnQueryDragIcon()
 void CMFCChatSeverDlg::OnBnClickedStartBtn()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	GetDlgItem(IDC_START_BTN)->EnableWindow(FALSE);
+	GetDlgItem(IDC_BUTTON3)->EnableWindow(TRUE);
+	GetDlgItem(IDC_DISCONNECT_BTN)->EnableWindow(TRUE);
+
 	MessageBox(TEXT("11111111111"));
 	TRACE(TEXT("####Conect Btn"));
 	CString strPort;
@@ -211,7 +252,27 @@ void CMFCChatSeverDlg::OnBnClickedStartBtn()
 void CMFCChatSeverDlg::OnBnClickedDisconnectBtn()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	MessageBox(TEXT("sddfsfd"));
+	GetDlgItem(IDC_START_BTN)->EnableWindow(TRUE);
+	GetDlgItem(IDC_BUTTON3)->EnableWindow(FALSE);
+	GetDlgItem(IDC_DISCONNECT_BTN)->EnableWindow(FALSE);
+
+	m_serve->Close();
+	
+	if (m_serve!=NULL)
+	{
+		delete m_serve;
+		m_serve = NULL;
+	}
+	
+	if (m_chat!=NULL)
+	{
+		delete m_chat;
+		m_chat = NULL;
+	}
+	CString strShow;
+	strShow = CatShowString(_T(""), _T("服务器停止"));
+	m_list.AddString(strShow);
+	UpdateData(FALSE);
 }
 
 
@@ -272,3 +333,46 @@ CString CMFCChatSeverDlg::CatShowString(CString strInfo, CString strMsg)
 	return strShow;
 }
 
+
+
+void CMFCChatSeverDlg::OnBnClickedClearBtn()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	m_list.ResetContent();
+}
+
+
+HBRUSH CMFCChatSeverDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+{
+	HBRUSH hbr = CDialogEx::OnCtlColor(pDC, pWnd, nCtlColor);
+
+	// TODO:  在此更改 DC 的任何特性
+
+	// TODO:  如果默认的不是所需画笔，则返回另一个画笔
+	CString strColor;
+	int i=m_WordColour.GetCurSel();
+	m_WordColour.GetLBText(i, strColor);
+	//m_WordColorCombo.GetWindowText(strColor);
+	if (strColor == _T("黑色"))
+	{
+		if (IDC_MSG_LIST == pWnd->GetDlgCtrlID() || IDC_SEND_EDIT == pWnd->GetDlgCtrlID())
+		{
+			pDC->SetTextColor(RGB(0, 0, 0));
+		}
+	}
+	if (strColor == _T("红色"))
+	{
+		if (IDC_MSG_LIST == pWnd->GetDlgCtrlID() || IDC_SEND_EDIT == pWnd->GetDlgCtrlID())
+		{
+			pDC->SetTextColor(RGB(255, 0, 0));
+		}
+	}
+	if (strColor == _T("蓝色"))
+	{
+		if (IDC_MSG_LIST == pWnd->GetDlgCtrlID() || IDC_SEND_EDIT == pWnd->GetDlgCtrlID())
+		{
+			pDC->SetTextColor(RGB(0, 0, 255));
+		}
+	}
+	return hbr;
+}

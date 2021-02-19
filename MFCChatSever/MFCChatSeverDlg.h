@@ -45,4 +45,7 @@ public:
 	
 	afx_msg void OnBnClickedButton3();
 	CString CatShowString(CString strInfo,CString strMsg);
+	afx_msg void OnBnClickedClearBtn();
+	CComboBox m_WordColour;
+	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 };

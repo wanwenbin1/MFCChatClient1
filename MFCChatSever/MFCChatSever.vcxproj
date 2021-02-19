@@ -211,6 +211,8 @@
     <None Include="res\MFCChatSever.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\24.bmp" />
+    <Image Include="res\bitmap1.bmp" />
     <Image Include="res\MFCChatSever.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

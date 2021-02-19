@@ -7,6 +7,8 @@
 #define IDS_ABOUTBOX                    101
 #define IDD_MFCCHATCLIENT_DIALOG        102
 #define IDR_MAINFRAME                   128
+#define IDB_HILL_BITMAP                 130
+#define IDB_HILL_BITMAP1                130
 #define IDC_DISCONECT_BTN               1000
 #define IDC_CONECT_BTN                  1001
 #define IDC_SEND_BTN                    1002
@@ -18,14 +20,17 @@
 #define IDC_LIST1                       1008
 #define IDC_IPADDRESS                   1009
 #define IDC_AUTOSEND_RADIO              1010
+#define IDC_NAME_EDIT                   1011
+#define IDC_SAVENAME_BTN                1012
+#define IDC_AUTOSEND_CHECK              1013
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        130
+#define _APS_NEXT_RESOURCE_VALUE        131
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1011
+#define _APS_NEXT_CONTROL_VALUE         1014
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

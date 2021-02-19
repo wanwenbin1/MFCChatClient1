@@ -71,5 +71,11 @@
     <Image Include="res\MFCChatSever.ico">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="res\bitmap1.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\24.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
 </Project>
